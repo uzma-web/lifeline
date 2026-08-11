@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Request for {{ req['patient_name'] }} — LifeLine{% endblock %}
+{% block content %}
+<section class="form-page">
+  <p class="eyebrow urgency-{{ req['urgency']|lower }}">{{ req['urgency'] }} request &middot; {{ req['status'] }}</p>
+  <h1>{{ req['patient_name'] }} needs <span class="tag tag-lg">{{ req['blood_group'] }}</span></h1>
+  <p class="hero-sub">{{ req['units_needed'] }} unit(s) at {{ req['hospital'] }}, {{ req['city'] }}. Contact: <span class="mono">{{ req['contact_phone'] }}</span></p>
+
+  {% if req['status'] == 'Open' %}
+  <form method="post" action="{{ url_for('resolve_request', request_id=req['id']) }}" style="margin-bottom: 2rem;">
+    <button type="submit" class="btn btn-ghost">Mark as fulfilled</button>
+  </form>
+  {% endif %}
+</section>
+
+<div class="pulse-divider" aria-hidden="true">
+  <svg viewBox="0 0 400 24" preserveAspectRatio="none"><polyline points="0,12 90,12 105,2 120,22 135,12 400,12" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+</div>
+
+<section class="donor-list">
+  <h2>{{ match_count }} compatible donor{{ 's' if match_count != 1 }} eligible right now</h2>
+  {% if matches %}
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Group</th>
+          <th>Name</th>
+          <th>City</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in matches %}
+        <tr>
+          <td><span class="tag">{{ d.blood_group }}</span></td>
+          <td>{{ d.name }}</td>
+          <td>{{ d.city }}{% if d.area %}, {{ d.area }}{% endif %}</td>
+          <td>
+            {% if d.id in responded_ids %}
+              <span class="status status-open">{{ responded_ids[d.id] }} &middot; <span class="mono">{{ d.phone }}</span></span>
+            {% else %}
+              <form method="post" action="{{ url_for('notify_donor', request_id=req['id'], donor_id=d.id) }}">
+                <button type="submit" class="btn btn-sm">Notify donor</button>
+              </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="empty">No eligible compatible donors yet in {{ req['city'] }}. Widen the search by checking the full <a href="{{ url_for('donors_list') }}">donor directory</a>, or share this request so more donors register.</p>
+  {% endif %}
+</section>
+{% endblock %}

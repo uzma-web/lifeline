@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Request blood — LifeLine{% endblock %}
+{% block content %}
+<section class="form-page">
+  <p class="eyebrow">Emergency request</p>
+  <h1>Post a blood request</h1>
+  <p class="hero-sub">We'll immediately show you eligible, compatible donors nearby. Their contact details stay private until you choose to notify them.</p>
+
+  <form method="post" class="card-form">
+    <label>
+      Patient name
+      <input type="text" name="patient_name" required value="{{ form.get('patient_name','') }}">
+    </label>
+
+    <div class="form-row">
+      <label>
+        Blood group needed
+        <select name="blood_group" required>
+          <option value="" disabled {{ 'selected' if not form.get('blood_group') }}>Select</option>
+          {% for bg in blood_groups %}
+            <option value="{{ bg }}" {{ 'selected' if form.get('blood_group') == bg }}>{{ bg }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>
+        Units needed
+        <input type="number" name="units_needed" min="1" value="{{ form.get('units_needed', 1) }}">
+      </label>
+    </div>
+
+    <div class="form-row">
+      <label>
+        Hospital
+        <input type="text" name="hospital" required value="{{ form.get('hospital','') }}">
+      </label>
+      <label>
+        City
+        <input type="text" name="city" required value="{{ form.get('city','') }}">
+      </label>
+    </div>
+
+    <div class="form-row">
+      <label>
+        Urgency
+        <select name="urgency">
+          <option value="Critical" {{ 'selected' if form.get('urgency') == 'Critical' }}>Critical &mdash; within hours</option>
+          <option value="Urgent" {{ 'selected' if form.get('urgency') == 'Urgent' }}>Urgent &mdash; within a day</option>
+          <option value="Normal" {{ 'selected' if form.get('urgency', 'Normal') == 'Normal' }}>Normal &mdash; planned surgery</option>
+        </select>
+      </label>
+      <label>
+        Your contact number
+        <input type="tel" name="contact_phone" required value="{{ form.get('contact_phone','') }}">
+      </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Find matching donors</button>
+  </form>
+</section>
+{% endblock %}

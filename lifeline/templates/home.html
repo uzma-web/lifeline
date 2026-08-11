@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}LifeLine — Find a blood donor near you{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Chikkamagaluru · community blood network</p>
+  <h1>Every request<br>has a name.</h1>
+  <p class="hero-sub">LifeLine connects people who need blood urgently with nearby donors who are actually eligible to give &mdash; not just on a list, but ready right now.</p>
+  <div class="hero-actions">
+    <a class="btn btn-primary" href="{{ url_for('new_request') }}">I need blood</a>
+    <a class="btn btn-ghost" href="{{ url_for('register') }}">I want to donate</a>
+  </div>
+</section>
+
+<div class="pulse-divider" aria-hidden="true">
+  <svg viewBox="0 0 400 24" preserveAspectRatio="none"><polyline points="0,12 90,12 105,2 120,22 135,12 400,12" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+</div>
+
+<section class="stats">
+  <div class="stat-card">
+    <span class="stat-num">{{ donor_count }}</span>
+    <span class="stat-label">registered donors</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-num">{{ open_requests }}</span>
+    <span class="stat-label">open requests</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-num">90</span>
+    <span class="stat-label">day eligibility gap enforced automatically</span>
+  </div>
+</section>
+
+<section class="recent">
+  <h2>Recent requests</h2>
+  {% if recent_requests %}
+    <div class="request-grid">
+      {% for r in recent_requests %}
+        <a class="request-card urgency-{{ r['urgency']|lower }}" href="{{ url_for('request_detail', request_id=r['id']) }}">
+          <span class="tag">{{ r['blood_group'] }}</span>
+          <h3>{{ r['patient_name'] }}</h3>
+          <p>{{ r['hospital'] }}, {{ r['city'] }}</p>
+          <span class="status status-{{ r['status']|lower }}">{{ r['status'] }}</span>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="empty">No requests yet. Once someone posts a request, it'll show up here.</p>
+  {% endif %}
+</section>
+
+<section class="how">
+  <h2>How the matching works</h2>
+  <ol class="how-steps">
+    <li><span class="step-num">01</span><div><strong>Donors register</strong> with blood group, city, and last donation date.</div></li>
+    <li><span class="step-num">02</span><div><strong>Someone posts a request</strong> with patient, hospital, and blood group needed.</div></li>
+    <li><span class="step-num">03</span><div><strong>LifeLine filters</strong> to donors who are medically compatible, nearby, and past their 90-day cooldown.</div></li>
+    <li><span class="step-num">04</span><div><strong>The requester notifies</strong> matched donors directly &mdash; no phone numbers exposed until then.</div></li>
+  </ol>
+</section>
+{% endblock %}

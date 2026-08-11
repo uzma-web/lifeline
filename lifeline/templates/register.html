@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Become a donor — LifeLine{% endblock %}
+{% block content %}
+<section class="form-page">
+  <p class="eyebrow">Donor registration</p>
+  <h1>Register as a donor</h1>
+  <p class="hero-sub">Takes under a minute. You'll only be contacted for a compatible, verified request.</p>
+
+  <form method="post" class="card-form">
+    <label>
+      Full name
+      <input type="text" name="name" required value="{{ form.get('name','') }}">
+    </label>
+
+    <div class="form-row">
+      <label>
+        Blood group
+        <select name="blood_group" required>
+          <option value="" disabled {{ 'selected' if not form.get('blood_group') }}>Select</option>
+          {% for bg in blood_groups %}
+            <option value="{{ bg }}" {{ 'selected' if form.get('blood_group') == bg }}>{{ bg }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>
+        Phone number
+        <input type="tel" name="phone" required value="{{ form.get('phone','') }}">
+      </label>
+    </div>
+
+    <div class="form-row">
+      <label>
+        City
+        <input type="text" name="city" required value="{{ form.get('city','') }}" placeholder="e.g. Chikkamagaluru">
+      </label>
+      <label>
+        Area <span class="optional">(optional)</span>
+        <input type="text" name="area" value="{{ form.get('area','') }}" placeholder="e.g. MG Road">
+      </label>
+    </div>
+
+    <label>
+      Last donation date <span class="optional">(leave blank if you've never donated)</span>
+      <input type="date" name="last_donation_date" value="{{ form.get('last_donation_date','') }}">
+    </label>
+
+    <p class="hint">We automatically hide you from search results for 90 days after a donation, so you're never contacted before you're medically ready again.</p>
+
+    <button type="submit" class="btn btn-primary">Register as donor</button>
+  </form>
+</section>
+{% endblock %}

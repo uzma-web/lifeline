@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Find donors — LifeLine{% endblock %}
+{% block content %}
+<section class="form-page">
+  <p class="eyebrow">Donor directory</p>
+  <h1>Find a donor</h1>
+
+  <form method="get" class="filter-form">
+    <select name="blood_group">
+      <option value="">Any blood group</option>
+      {% for bg in blood_groups %}
+        <option value="{{ bg }}" {{ 'selected' if selected_group == bg }}>{{ bg }}</option>
+      {% endfor %}
+    </select>
+    <input type="text" name="city" placeholder="City" value="{{ selected_city }}">
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+</section>
+
+<section class="donor-list">
+  {% if donors %}
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Group</th>
+          <th>Name</th>
+          <th>City</th>
+          <th>Status</th>
+          <th>Contact</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in donors %}
+        <tr class="{{ 'row-ineligible' if not d.eligible }}">
+          <td><span class="tag">{{ d.blood_group }}</span></td>
+          <td>{{ d.name }}</td>
+          <td>{{ d.city }}{% if d.area %}, {{ d.area }}{% endif %}</td>
+          <td>
+            {% if d.eligible %}
+              <span class="status status-open">Eligible now</span>
+            {% else %}
+              <span class="status status-fulfilled">Eligible in {{ d.days_left }}d</span>
+            {% endif %}
+          </td>
+          <td class="mono">{{ d.phone if d.eligible else '—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="empty">No donors match yet. Try a different blood group or city, or <a href="{{ url_for('register') }}">be the first to register</a>.</p>
+  {% endif %}
+</section>
+{% endblock %}

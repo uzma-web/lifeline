@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}LifeLine — Blood Donor Network{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="{{ url_for('home') }}">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2s7 7.5 7 12.5A7 7 0 0 1 5 14.5C5 9.5 12 2 12 2Z" fill="currentColor"/></svg>
+      </span>
+      LifeLine
+    </a>
+    <nav class="site-nav">
+      <a href="{{ url_for('donors_list') }}">Find donors</a>
+      <a href="{{ url_for('register') }}">Become a donor</a>
+      <a href="{{ url_for('new_request') }}" class="nav-cta">Request blood</a>
+    </nav>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-stack">
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="pulse-divider" aria-hidden="true">
+      <svg viewBox="0 0 400 24" preserveAspectRatio="none"><polyline points="0,12 90,12 105,2 120,22 135,12 400,12" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    </div>
+    <p>LifeLine — a student-built donor network. Built as a portfolio project; verify all medical details with a hospital before acting.</p>
+  </footer>
+</body>
+</html>
